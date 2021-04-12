@@ -39,7 +39,8 @@ export default {
               h('Button', {
                 'attrs': {
                   type: "error",
-                  style: "margin-left: 5px"
+                  style: "margin-left: 5px",
+                  disabled: dataset.row.orderStatus === "CANCELED" || dataset.row.orderStatus === "RETURNED"
                 },
                 on: {
                   click: () => {
@@ -65,12 +66,17 @@ export default {
                           h('Option', {props: {value: "RETURNED"}}, "RETURNED"),
                         ])
                       },
-                      content: "Do you want to cancel this reservation " + dataset.row.title + "?",
-                      onOk: () => {
-                        this.$store.dispatch('myReservation/CHANGE_RESERVATION_STATUS', {
-                          orderId: dataset.row.orderId,
-                          status: this.tempChange.status
-                        });
+                      content: "Do you want to change the status of " + dataset.row.title + "?",
+                      onOk: async () => {
+                        try {
+                          await this.$store.dispatch('myReservation/CHANGE_RESERVATION_STATUS', {
+                            orderId: dataset.row.orderId,
+                            status: this.tempChange.status
+                          });
+                          this.$Message.info("Change successfully!")
+                        } catch (e) {
+                          this.$Message.error(e)
+                        }
                       }
                     });
                   }

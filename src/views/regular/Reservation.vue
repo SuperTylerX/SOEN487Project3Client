@@ -19,7 +19,7 @@ export default {
         }, {
           title: "Book Title",
           key: "title",
-          width: 500
+          width: 400
         }, {
           title: "Created Date",
           render: (h, dataset) => {
@@ -39,6 +39,48 @@ export default {
             return h('span', [
               h('Button', {
                 'attrs': {
+                  type: "warning",
+                  disabled: dataset.row.orderStatus !== "PROCESSING"
+                },
+                on: {
+                  click: () => {
+                    this.tempChange.pickupDate = dataset.row.pickupDate;
+                    this.$Modal.confirm({
+                      title: "Change Status",
+                      render: (h) => {
+                        return h('DatePicker', {
+                          props: {
+                            type: "date",
+                            value: new Date(dataset.row.pickupDate),
+                            options: {
+                              disabledDate: function (date) {
+                                return date < new Date() || date.getTime() > new Date().getTime() + 1000 * 60 * 60 * 24 * 7
+                              }
+                            },
+                            autofocus: true,
+                            placeholder: 'Please select the pickup date'
+                          },
+                          on: {
+                            "on-change": (val) => {
+                              console.log(val)
+                              this.tempChange.pickupDate = val;
+                            }
+                          }
+                        })
+                      },
+                      content: "Do you want to cancel this reservation " + dataset.row.title + "?",
+                      onOk: async () => {
+                        await this.$store.dispatch('myReservation/CHANGE_RESERVATION_DATE', {
+                          orderId: dataset.row.orderId,
+                          pickupDate: +new Date(this.tempChange.pickupDate)
+                        });
+                      }
+                    });
+                  }
+                }
+              }, "Change Pickup Date"),
+              h('Button', {
+                'attrs': {
                   type: "error",
                   style: "margin-left: 5px",
                   disabled: dataset.row.orderStatus !== "PROCESSING"
@@ -56,9 +98,13 @@ export default {
                 }
               }, "Cancel")
             ]);
-          }
+          },
+          width: 280
         }
-      ]
+      ],
+      tempChange: {
+        pickupDate: 0
+      }
     }
   },
   async mounted() {
