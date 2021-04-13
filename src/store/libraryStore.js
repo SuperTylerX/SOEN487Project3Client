@@ -1,4 +1,5 @@
 import axios from "axios";
+import {baseUrl} from '@/config/config';
 
 export default {
 
@@ -17,7 +18,7 @@ export default {
     actions: {
         async CHANGE_BOOK_LIST({commit}, payloads) {
             let token = sessionStorage.getItem("token");
-            let bookList = await axios.get("http://localhost:8080/library/book/search", {
+            let bookList = await axios.get(`${baseUrl}/book/search`, {
                 headers: {'Authorization': token},
                 params: {
                     title: payloads.title,
@@ -35,7 +36,7 @@ export default {
         },
         async LOAD_ALL_BOOKS({commit}, payloads) {
             let token = sessionStorage.getItem("token");
-            let bookList = await axios.get("http://localhost:8080/library/book", {
+            let bookList = await axios.get(`${baseUrl}/book`, {
                 headers: {'Authorization': token},
                 params: {
                     pageNum: payloads.page
@@ -52,7 +53,7 @@ export default {
         },
         async DELETE_BOOK({state}, payloads) {
             let token = sessionStorage.getItem("token");
-            let result = await axios.delete("http://localhost:8080/library/book/delete", {
+            let result = await axios.delete(`${baseUrl}/book/delete`, {
                 headers: {'Authorization': token},
                 params: {
                     bookId: payloads.bookId
@@ -66,7 +67,7 @@ export default {
         },
         async UPDATE_BOOK({dispatch, state}, payloads) {
             let token = sessionStorage.getItem("token");
-            let result = await axios.put("http://localhost:8080/library/book/update", payloads.book, {
+            let result = await axios.put(`${baseUrl}/book/update`, payloads.book, {
                 headers: {
                     'Authorization': token
                 }
@@ -79,7 +80,7 @@ export default {
         },
         async ADD_BOOK({state}, payloads) {
             let token = sessionStorage.getItem("token");
-            let result = await axios.post("http://localhost:8080/library/book/create", payloads.book, {
+            let result = await axios.post(`${baseUrl}/book/create`, payloads.book, {
                 headers: {
                     'Authorization': token
                 }

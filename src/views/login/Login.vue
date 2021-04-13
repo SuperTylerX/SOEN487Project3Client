@@ -44,6 +44,7 @@
 import axios from 'axios';
 import {captcha} from '@/api/recaptcha';
 import qs from 'querystring';
+import {baseUrl} from '@/config/config';
 
 export default {
   name: "Login.vue",
@@ -88,7 +89,7 @@ export default {
       this.$refs[name].validate(async (valid) => {
         if (valid) {
           try {
-            let result = await axios.post("http://localhost:8080/library/auth/login", qs.stringify(this.loginData)).then(data => data.data);
+            let result = await axios.post(`${baseUrl}/auth/login`, qs.stringify(this.loginData)).then(data => data.data);
             if (result.code === 200) {
               sessionStorage.setItem("token", result.token);
               this.$Message.success('login Successfully!');

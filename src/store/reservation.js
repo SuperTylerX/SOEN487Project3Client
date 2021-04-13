@@ -1,5 +1,6 @@
 import axios from "axios";
-import qs from "querystring"
+import qs from "querystring";
+import {baseUrl} from '@/config/config';
 
 export default {
 
@@ -16,7 +17,7 @@ export default {
         async LOAD_RESERVATION({commit}) {
             let token = sessionStorage.getItem("token");
             let reservation = await
-                axios.get("http://localhost:8080/library/order/list", {
+                axios.get(`${baseUrl}/order/list`, {
                     headers: {'Authorization': token}
                 }).then(data => data.data);
             if (reservation.code === 200) {
@@ -28,7 +29,7 @@ export default {
         async CHANGE_RESERVATION_STATUS({dispatch}, payloads) {
             let token = sessionStorage.getItem("token");
             let reservation = await
-                axios.put("http://localhost:8080/library/order/modifyStatus",
+                axios.put(`${baseUrl}/order/modifyStatus`,
                     qs.stringify(payloads),
                     {
                         headers: {
@@ -45,7 +46,7 @@ export default {
         async CHANGE_RESERVATION_DATE({dispatch}, payloads) {
             let token = sessionStorage.getItem("token");
             let reservation = await
-                axios.put("http://localhost:8080/library/order/modifyDate",
+                axios.put(`${baseUrl}/order/modifyDate`,
                     qs.stringify(payloads),
                     {
                         headers: {

@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import {baseUrl} from '@/config/config';
 
 export default {
 
@@ -19,7 +19,7 @@ export default {
                 throw new Error("Token Expired");
             }
             let userInfo = await
-                axios.get("http://localhost:8080/library/auth/user", {
+                axios.get(`${baseUrl}/auth/user`, {
                     headers: {'Authorization': token}
                 }).then(data => data.data);
             if (userInfo.code === 200) {

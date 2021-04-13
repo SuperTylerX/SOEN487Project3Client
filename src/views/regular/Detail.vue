@@ -57,6 +57,7 @@
 <script>
 import axios from "axios";
 import qs from "querystring"
+import {baseUrl} from '@/config/config';
 
 export default {
   name: "Detail",
@@ -96,7 +97,7 @@ export default {
         bookId: this.book.bookId
       }
       let token = sessionStorage.getItem("token");
-      let result = await axios.post("http://localhost:8080/library/order/create", qs.stringify(createObj), {
+      let result = await axios.post(`${baseUrl}/order/create`, qs.stringify(createObj), {
         headers: {
           'Authorization': token,
           'Content-Type': "application/x-www-form-urlencoded"
@@ -113,7 +114,7 @@ export default {
   async mounted() {
     let token = sessionStorage.getItem("token");
     let bookId = this.$route.query.id
-    this.book = await axios.get("http://localhost:8080/library/book/detail", {
+    this.book = await axios.get(`${baseUrl}/book/detail`, {
       headers: {'Authorization': token},
       params: {
         bookId
